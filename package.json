@@ -18,6 +18,7 @@
   "homepage": "https://github.com/TriangleYJ/todo-express#readme",
   "type": "module",
   "dependencies": {
-    "express": "^4.17.2"
+    "express": "^4.17.2",
+    "mysql2": "^2.3.3"
   }
 }
