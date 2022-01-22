@@ -1,0 +1,16 @@
+version: "3"
+services:
+  db:
+    image: mysql
+    container_name: todo_mysql
+    restart: unless-stopped
+    ports:
+      - 3306:3306
+    volumes:
+      - todo-mysql:/var/lib/mysql
+    environment:
+      TZ: Asia/Seoul
+      MYSQL_ROOT_PASSWORD: Super-Easy-Passw0rd
+
+volumes:
+  todo-mysql:
