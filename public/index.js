@@ -10,8 +10,8 @@ const error_handler = res =>
         }
     })
 
-const list_render = () => {
-    fetch("/api/todo")
+const list_render = (query) => {
+    fetch("/api/todo" + (query ?? "?filter=title"))
     .then(res => error_handler(res))
     .then(res => res.json())
     .then(json => {
@@ -26,6 +26,21 @@ const list_render = () => {
                 <hr />`
         }
     })
+}
+
+const filter = () => {
+    const filter_select = document.querySelector("#filter")
+    const value = filter_select.options[filter_select.selectedIndex].value
+    switch(value){
+        case "date_new":
+            list_render("?filter=date_new")
+            break;
+        case "title":
+            list_render("?filter=title")
+            break;
+        case "unknown":
+            break;
+    }
 }
 
 const submit_form = () => {
