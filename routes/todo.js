@@ -6,7 +6,12 @@ router.post('/', (req, res) => {
     res.sendStatus(200)
 })
 
-router.delete('/:id/delete', (req, res) => {
+router.put('/:id', (req, res) => {
+    console.log('put', req.body);
+    res.sendStatus(200)
+})
+
+router.delete('/:id', (req, res) => {
     console.log("delete", req.params.id, req.body)
     res.sendStatus(200)
 })

@@ -11,9 +11,9 @@
     <h1>My TODO</h1>
     <br>
 
-    <h2>Enter your Todo</h2>
+    <h2 id="header_text">Enter your Todo</h2>
     <div>
-        <form action="/api/todo" method="post">
+        <form onsubmit="return submit_form()">
             <input type="hidden" name="id" id="edit_id">
             <label for="title">Todo title</label>
             <input name="title" id="title" type="text" placeholder="title" >
@@ -22,6 +22,7 @@
             <label for="date">Due date</label>
             <input name="date" id="date" type="date">
             <input type="submit" value="Add" />
+            <input type="button" id="cancel" value="Cancel" onclick="edit_cancel()" style="visibility: collapse;"/>
         </form>
     </div>
     <br>

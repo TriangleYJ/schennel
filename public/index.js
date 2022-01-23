@@ -1,7 +1,21 @@
+const error_handler = res =>
+    new Promise((resolve, reject) => {
+        if(res.status === 200){
+            //console.log(res)
+            resolve(res)
+        }
+        else{
+            console.log("An error occured!", res.status)
+            reject(Error("API Error"))
+        }
+    })
+
 const list_render = () => {
     fetch("/api/todo")
+    .then(res => error_handler(res))
     .then(res => res.json())
     .then(json => {
+        document.querySelector("#list").innerHTML = ""
         for(let i of json){
             document.querySelector("#list").innerHTML += 
                 `<dt>${i.title}</dt>
@@ -10,29 +24,56 @@ const list_render = () => {
                 <button onclick="item_edit(${i.id})">edit</button>
                 <button onclick="item_delete(${i.id})">delete</button>
                 <hr />`
-            
         }
     })
 }
 
+const submit_form = () => {
+    const id = document.querySelector("#edit_id").value
+    const title = document.querySelector("#title").value
+    const subtitle = document.querySelector("#subtitle").value
+    const date = document.querySelector("#date").value
+    const serial = {id, title, subtitle, date}
+
+    const method = id ? "PUT" : "POST"
+    const url = '/api/todo' + (id ? '/' + id : '')
+    fetch(url, {method, body: JSON.stringify(serial), headers: {"Content-Type": 'application/json'}})
+    .then(res => error_handler(res))
+    .then(() => {
+        edit_cancel()
+        list_render()    
+    })
+    return false;
+}
+
+const set_input = (id, title, subtitle, date) => {
+    document.querySelector("#edit_id").value = id
+    document.querySelector("#title").value = title
+    document.querySelector("#subtitle").value = subtitle
+    document.querySelector("#date").value = date
+}
+
+const edit_cancel = () => {
+    set_input("", "", "", "")
+    document.querySelector("#header_text").textContent = "Enter your Todo"
+    document.querySelector("#cancel").style = "visibility: collapse;"
+}
+
 const item_edit = (id) => {
+    document.querySelector("#header_text").textContent = "Edit your Todo"
+    document.querySelector("#cancel").style = "visibility: visible;"
     fetch(`/api/todo/${id}`)
+    .then(res => error_handler(res))
     .then(res => res.json())
-    .then(json => {
-        document.querySelector("#edit_id").value = json.id
-        document.querySelector("#title").value = json.title
-        document.querySelector("#subtitle").value = json.subtitle
-        document.querySelector("#date").value = json.date
+    .then(({id, title, subtitle, date}) => {
+        set_input(id, title, subtitle, date)
     })
 }
 
 const item_delete = (id) => {
-    fetch(`/api/todo/${id}/delete`, {method: "DELETE"})
-    .then(res => {
-        if(res.status === 200) console.log("Successfully Deleted!")
-        else console.log("An error occured during deletion!", res.status)
-    })
-    list_render()
+    fetch(`/api/todo/${id}`, {method: "DELETE"})
+    .then(res => error_handler(res))
+    .then(() => list_render())
 }
 
 window.onload = () => {
