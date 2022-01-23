@@ -13,12 +13,12 @@ router.delete('/:id/delete', (req, res) => {
 
 router.get('/:id', (req, res) => {
     console.log("GET", req.params.id)
-    res.json([{
+    res.json({
         id: 1,
         title: "title",
         subtitle: "subtitle",
         date: "2021-01-12"
-    }])
+    })
 })
 
 router.get('/', (req, res) => {
