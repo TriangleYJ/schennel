@@ -1,48 +1,31 @@
-import express from 'express'
-export const router = express.Router()
+const express = require('express')
+const models = require('../models')
+const router = express.Router()
 
 router.post('/', (req, res) => {
-    console.log('post', req.body);
+    models.Todo.create(req.body)
     res.sendStatus(200)
 })
 
-router.put('/:id', (req, res) => {
-    console.log('put', req.body);
+router.put('/:id', async (req, res) => {
+    const todo = await models.Todo.findOne({where: {id: req.params.id}})
+    if(todo) await todo.update(req.body)
     res.sendStatus(200)
 })
 
-router.delete('/:id', (req, res) => {
-    console.log("delete", req.params.id, req.body)
+router.delete('/:id', async (req, res) => {
+    await models.Todo.destroy({where: {id: req.params.id}})
     res.sendStatus(200)
 })
 
-router.get('/:id', (req, res) => {
-    console.log("GET", req.params.id)
-    res.json({
-        id: 1,
-        title: "title",
-        subtitle: "subtitle",
-        date: "2021-01-12"
-    })
+router.get('/:id', async (req, res) => {
+    const data = await models.Todo.findOne({where: {id: req.params.id}})
+    res.json(data)
 })
 
-router.get('/', (req, res) => {
-    res.json([{
-        id: 1,
-        title: "title",
-        subtitle: "subtitle",
-        date: "2021-01-12"
-    }, {
-        id: 2,
-        title: "title2",
-        subtitle: "subtitle2",
-        date: "2021-01-13"
-    }, {
-        id: 3,
-        title: "title3",
-        subtitle: "subtitle333",
-        date: "2021-01-11"
-    }])
+router.get('/', async (req, res) => {
+    const data = await models.Todo.findAll({raw: true})
+    res.json(data)
 })
 
-export default router
+module.exports = router

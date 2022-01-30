@@ -1,5 +1,5 @@
-import express from 'express'
-import router from './routes/index.js'
+const express = require('express')
+const router = require('./routes/index')
 const app = express()
 
 const port = process.env.PORT | 8000

@@ -1,6 +1,6 @@
-import express from 'express'
-import todo_router from './todo.js'
-export const router = express.Router()
+const express = require('express')
+const todo_router = require('./todo')
+const router = express.Router()
 
 router.get('/', (req, res) => {
     res.send("Hello world api!!")
@@ -8,4 +8,4 @@ router.get('/', (req, res) => {
 
 router.use('/todo', todo_router)
 
-export default router
+module.exports = router

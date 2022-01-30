@@ -48,7 +48,7 @@ const submit_form = () => {
     const title = document.querySelector("#title").value
     const subtitle = document.querySelector("#subtitle").value
     const date = document.querySelector("#date").value
-    const serial = {id, title, subtitle, date}
+    const serial = {title, subtitle, date}
 
     const method = id ? "PUT" : "POST"
     const url = '/api/todo' + (id ? '/' + id : '')
