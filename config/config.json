@@ -10,14 +10,14 @@
     "username": "root",
     "password": "Super-Easy-Passw0rd",
     "database": "todo",
-    "host": "127.0.0.1",
+    "host": "todo_mysql",
     "dialect": "mysql"
   },
   "production": {
     "username": "root",
     "password": "Super-Easy-Passw0rd",
     "database": "todo",
-    "host": "127.0.0.1",
+    "host": "todo_mysql",
     "dialect": "mysql"
   }
 }

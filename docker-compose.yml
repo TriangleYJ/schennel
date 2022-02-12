@@ -1,16 +1,31 @@
 version: "3"
 services:
+  backend:
+    build: .
+    container_name: todo_node
+    environment:
+      - 'NODE_ENV=production'
+    depends_on:
+      - db
+    restart: 'on-failure:5'
+    ports:
+      - 3921:8000
+    networks:
+      - net
+    
   db:
     image: mysql
     container_name: todo_mysql
     restart: unless-stopped
-    ports:
-      - 3306:3306
     volumes:
       - todo-mysql:/var/lib/mysql
     environment:
       TZ: Asia/Seoul
       MYSQL_ROOT_PASSWORD: Super-Easy-Passw0rd
+    networks:
+      - net
 
 volumes:
   todo-mysql:
+networks:
+  net:
