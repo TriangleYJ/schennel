@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <title>TODO</title>
+</head>
+<body style="padding: 20px;">
+    <h1>My TODO</h1>
+    <br>
+
+    <h2 id="header_text">Enter your Todo</h2>
+    <div>
+        <form onsubmit="return submit_form()">
+            <input type="hidden" name="id" id="edit_id">
+            <label for="title">Todo title</label>
+            <input name="title" id="title" type="text" placeholder="title" >
+            <label for="subtitle">Todo subtitle</label>
+            <input name="subtitle" id="subtitle" type="text" placeholder="subtitle" >
+            <label for="date">Due date</label>
+            <input name="date" id="date" type="date">
+            <input type="submit" value="Add" />
+            <input type="button" id="cancel" value="Cancel" onclick="edit_cancel()" style="visibility: collapse;"/>
+        </form>
+    </div>
+    <br>
+    <h2>List of Todos</h2>
+    <label for="filter">Filter</label>
+    <select name="filter" id="filter" onchange="filter()">
+        <option value="title">Title</option>
+        <option value="date_new">Date</option>
+    </select>
+    <br><br>
+    <div>
+        <dl id="list">
+        </dl>
+    </div>
+    <script src="./index.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</body>
+</html>

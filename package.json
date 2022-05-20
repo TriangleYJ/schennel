@@ -17,5 +17,8 @@
   },
   "homepage": "https://github.com/TriangleYJ/route88#readme",
   "dependencies": {
+    "express": "^4.17.2",
+    "mysql2": "^2.3.3",
+    "sequelize": "^6.14.1"
   }
 }
