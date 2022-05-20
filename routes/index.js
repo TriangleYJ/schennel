@@ -8,4 +8,8 @@ router.get('/', (req, res) => {
 
 router.use('/todo', todo_router)
 
+//router.use('/user', null)
+//router.use('/bus', null)
+
+
 module.exports = router

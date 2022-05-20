@@ -2,7 +2,7 @@ version: "3"
 services:
   backend:
     build: .
-    container_name: todo_node
+    container_name: route_node
     environment:
       - 'NODE_ENV=production'
     depends_on:
@@ -15,10 +15,10 @@ services:
     
   db:
     image: mysql
-    container_name: todo_mysql
+    container_name: route_mysql
     restart: unless-stopped
     volumes:
-      - todo-mysql:/var/lib/mysql
+      - route-mysql:/var/lib/mysql
     environment:
       TZ: Asia/Seoul
       MYSQL_ROOT_PASSWORD: Super-Easy-Passw0rd
@@ -26,6 +26,6 @@ services:
       - net
 
 volumes:
-  todo-mysql:
+  route-mysql:
 networks:
   net:

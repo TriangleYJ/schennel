@@ -2,22 +2,22 @@
   "development": {
     "username": "root",
     "password": "Super-Easy-Passw0rd",
-    "database": "todo",
+    "database": "route88",
     "host": "127.0.0.1",
     "dialect": "mysql"
   },
   "test": {
     "username": "root",
     "password": "Super-Easy-Passw0rd",
-    "database": "todo",
-    "host": "todo_mysql",
+    "database": "route88",
+    "host": "route88_mysql",
     "dialect": "mysql"
   },
   "production": {
     "username": "root",
     "password": "Super-Easy-Passw0rd",
-    "database": "todo",
-    "host": "todo_mysql",
+    "database": "route88",
+    "host": "route88_mysql",
     "dialect": "mysql"
   }
 }
