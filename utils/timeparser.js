@@ -4,9 +4,12 @@ const DSTRING = { '월': 0, '화': 1, '수': 2, '목': 3, '금': 4, '토': 5, '�
 const RDSTRING = "월화수목금토일"
 
 const parser = {
-    unwrap(string) {
+    timeUnwrap(string, newVoteStyle) {
         const split_string = string.split(",")
         const tmp_dstring = [0, 0, 0, 0, 0, 0, 0]
+        let min_srt_time = null;
+        let max_end_time = null;
+
         for (let str of split_string) {
             str = str.trim()
             if (!TREGEX.test(str)) return null;
@@ -15,19 +18,26 @@ const parser = {
             let end_date = match[2] ? DSTRING[match[2]] : DSTRING[match[1]]
             let srt_time = parseInt(match[3])
             let end_time = parseInt(match[4] ?? match[3])
+            end_time += (srt_time > end_time) ? 24 : 0
+            if(!max_end_time || end_time > max_end_time) max_end_time = end_time;
+            if(!min_srt_time || srt_time < min_srt_time) min_srt_time = srt_time;
 
             for (let i = srt_date; ; i = (i + 1) % 7) {
-                for (let j = srt_time; ; j++) {
-                    const dj = j % 24;
-                    tmp_dstring[(i + Math.floor(j / 24)) % 7] |= (1 << dj);
-                    if (dj == end_time) break;
+                if(newVoteStyle) tmp_dstring[i] = 1;
+                else {
+                    for (let j = srt_time; ; j++) {
+                        const dj = j % 24;
+                        tmp_dstring[(i + Math.floor(j / 24)) % 7] |= (1 << dj);
+                        if (j == end_time) break;
+                    }
                 }
                 if (i == end_date) break;
             }
         }
+        if(newVoteStyle) return {date: tmp_dstring, time: [min_srt_time, max_end_time]}
         return tmp_dstring;
     },
-    wrap(timeslot) {
+    timeWrap(timeslot) {
         const tmp_strings = []
         // combining time by date
         for(let i = 0; i < 7; i++){
@@ -64,4 +74,4 @@ const parser = {
     },
 }
 
-module.exports = parser;
+module.exports = parser

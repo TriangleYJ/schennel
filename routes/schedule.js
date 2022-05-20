@@ -1,12 +1,14 @@
 const express = require('express')
 const models = require('../models')
-const { unwrap, wrap } = require('../utils/timeparser')
+const { timeUnwrap, timeWrap } = require('../utils/timeparser')
 const router = express.Router()
 
 
 router.get('/test', (req, res) => {
-    let a=(unwrap("월-화:12-15, 화:13, 수-목:23-3"))
-    if(a) console.log(wrap(a))
+    let a=(timeUnwrap("월-금:22-4", true))
+    if(a) console.log(a)
+    a=(timeUnwrap("수-목:23-0"))
+    if(a) console.log(timeWrap(a))
 
     res.send('ok')
 })
