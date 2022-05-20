@@ -34,7 +34,13 @@ const parser = {
                 if (i == end_date) break;
             }
         }
-        if(newVoteStyle) return {date: tmp_dstring, time: [min_srt_time, max_end_time]}
+        if(newVoteStyle) {
+            let possibleDate = []
+            tmp_dstring.unshift(tmp_dstring.pop())
+            for(let i = 0; i < 7; i++) if(tmp_dstring[i] === 1) possibleDate.push(i);
+
+            return {date: possibleDate.join('|'), time: [min_srt_time % 24, (max_end_time+1) % 24]}
+        }
         return tmp_dstring;
     },
     timeWrap(timeslot) {
