@@ -1,5 +1,5 @@
 {
-  "name": "route88",
+  "name": "schenneltalk",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/TriangleYJ/route88.git"
+    "url": "git+https://github.com/TriangleYJ/schennel.git"
   },
   "author": "triangleyj",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/TriangleYJ/route88/issues"
+    "url": "https://github.com/TriangleYJ/schennel/issues"
   },
-  "homepage": "https://github.com/TriangleYJ/route88#readme",
+  "homepage": "https://github.com/TriangleYJ/schennel#readme",
   "dependencies": {
     "express": "^4.17.2",
     "mysql2": "^2.3.3",
