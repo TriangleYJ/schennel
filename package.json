@@ -1,0 +1,21 @@
+{
+  "name": "route88",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TriangleYJ/route88.git"
+  },
+  "author": "triangleyj",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/TriangleYJ/route88/issues"
+  },
+  "homepage": "https://github.com/TriangleYJ/route88#readme",
+  "dependencies": {
+  }
+}
