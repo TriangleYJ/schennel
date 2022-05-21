@@ -18,7 +18,7 @@ const when2meet = {
         const res = await raw.text()
         const vid = res.match(/window.location='(.+)'/)[1]
         console.log(vid)
-        return vid
+        return vid.slice(2, vid.length)
     },
     async requestDoVote(name, vid, avail) {
         const ivid = vid.split("-")[0]
@@ -46,7 +46,6 @@ const when2meet = {
         return res
     },
     async requestGetDetail(vid) {
-        console.log(`${ORIGIN}${vid}`);
         const raw = await fetch(`${ORIGIN}?${vid}`, {
             "headers": HEADER,
             "method": "GET"

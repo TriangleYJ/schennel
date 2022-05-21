@@ -22,6 +22,9 @@ services:
     environment:
       TZ: Asia/Seoul
       MYSQL_ROOT_PASSWORD: Super-Easy-Passw0rd
+      MYSQL_DATABASE: schennel
+    ports:
+      - 3306:3306
     networks:
       - net
 

@@ -96,6 +96,9 @@ const parser = {
     enday2num(string) {
         return DSTRING_EN[string]
     },
+    intersectTimeHexs(timeHexs){
+        return [0, 0, 0, 0, 0, 0, 0]
+    }
 }
 
 module.exports = parser
