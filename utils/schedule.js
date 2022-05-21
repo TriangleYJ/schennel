@@ -29,21 +29,26 @@ schedule.createVote = async (nessaryVoter, timestring, name) => {
     return k
 }
 
+schedule.currentVote = async () => {
+    return await getRecentVote()
+}
+
 schedule.doVote = async (timestring, user) => {
     // const timestring = "수-목:13-14"
     // const user = "fdas"
 
     const elem = await getRecentVote();
-    if (!elem) throw "no vote data"
+    if (!elem) throw "현재 진행중인 일정조사가 없습니다!"
     let k = await requestGetDetail(elem.vid)
     let u = timeUnwrap(timestring)
+    if(u === null) throw "time syntax error"
     await requestDoVote(user, elem.vid, timeToAvailability(k.timeOfSlot, u))
-    return true
+    return elem
 }
 
 schedule.getStatus = async () => {
     const elem = await getRecentVote();
-    if (!elem) throw "no vote data"
+    if (!elem) throw "현재 진행중인 일정조사가 없습니다!"
 
     let k = await requestGetDetail(elem.vid)
     const all = await Vote.findAll()
@@ -55,7 +60,7 @@ schedule.getStatus = async () => {
 
 schedule.getParticipant = async () => {
     const elem = await getRecentVote()
-    if (!elem) throw "no vote data"
+    if (!elem) throw "현재 진행중인 일정조사가 없습니다!"
     const nessaryVoter = elem.participants.split(",")
 
     let k = await requestGetDetail(elem.vid)
@@ -68,10 +73,10 @@ schedule.getVote = async (name) => {
     // const name = "helloworld"
 
     const elem = await Vote.findOne({ where: { name: name } })
-    if (!elem) throw "vote not found"
+    if (!elem) throw "해당 이름을 찾을 수 없습니다!"
     elem.changed('updatedAt', true)
     await elem.save()
-    return true
+    return elem
 }
 
 schedule.deleteVote = async (name) => {

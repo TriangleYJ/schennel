@@ -47,6 +47,7 @@ router.get('/doVote', async (req, res) => {
         if (!elem) throw "no vote data"
         let k = await requestGetDetail(elem.vid)
         let u = timeUnwrap(timestring)
+        if(u === null) throw "time syntax error"
         await requestDoVote(user, elem.vid, timeToAvailability(k.timeOfSlot, u))
         res.send("ok")
     } catch (e) {
