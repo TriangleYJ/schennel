@@ -8,6 +8,7 @@ const cheerio = require('cheerio')
 const { enday2num } = require('./timeparser')
 
 const when2meet = {
+    origin: ORIGIN,
     async requestNewVote(name, possibleDate, noEarlierThan, noLaterThan) {
         //console.log(`NewEventName=${encodeURI(name)}&DateTypes=DaysOfTheWeek&PossibleDates=${encodeURI(possibleDate)}&NoEarlierThan=${noEarlierThan}&NoLaterThan=${noLaterThan}&TimeZone=Asia%2FSeoul`)
         const raw = await fetch(`${ORIGIN}SaveNewEvent.php`, {

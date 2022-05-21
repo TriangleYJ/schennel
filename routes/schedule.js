@@ -115,6 +115,16 @@ router.get('/deleteVote', async (req, res) => {
     }
 })
 
+router.get('/listVote', async(req, res) => {
+    try {
+        const all = await Vote.findAll({raw: true})
+        res.send(all)
+    } catch (e) {
+        console.log(e)
+        res.status(500).send(e);
+    }
+})
+
 /* router.get('/gc', async (req, res) => {
     const vid = "15726999-mp7pR"
 

@@ -1,15 +1,34 @@
 const { default: axios } = require("axios");
 
-const cht = {
-    GROUP_ID: process.env.GROUP_ID ?? 0xdeadbeef,
-    BOT_NAME: process.env.BOT_NAME ?? "schennel",
-};
+const cht = {};
+cht.commandHandler = {
+    createVote() {
 
-cht.hello = (res) => res + 1;
-cht.log = (token, data) => {
-    console.log("token", data);
-    console.log("Message sent: ", data);
+    },
+    doVote() {
+
+    },
+    confirmVote() {
+
+    },
+    cancelVote() {
+
+    },
+    cancelVote() {
+
+    },
+    alertVote() {
+
+    },
+    currentVote() {
+
+    },
+    remind() {
+
+    }
 }
+
+cht.hello = (res) => "hello world! " + res;
 cht.sendMessage = (message) => {
 /*     axios.post(`https://api.channel.io/open/v3/groups/${GROUP_ID}/messages?botName=${BOT_NAME}`, {
         "blocks": [
