@@ -1,29 +1,34 @@
 const { default: axios } = require("axios");
+const schedule = require("./schedule")
 
 const cht = {};
 cht.commandHandler = {
-    createVote() {
+    async createVote(args) {
+        schedule.createVote()
+        return "hello"
+    },
+    async doVote() {
 
     },
-    doVote() {
+    async confirmVote() {
 
     },
-    confirmVote() {
+    async cancelVote() {
 
     },
-    cancelVote() {
+    async alertVote() {
 
     },
-    cancelVote() {
+    async listVote() {
 
     },
-    alertVote() {
+    async checkoutVote() {
 
     },
-    currentVote() {
+    async currentVote() {
 
     },
-    remind() {
+    async remind() {
 
     }
 }
