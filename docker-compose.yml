@@ -9,7 +9,9 @@ services:
       - db
     restart: 'on-failure:5'
     ports:
-      - 3921:8000
+      - 8000:8000
+    env_file:
+      - .env
     networks:
       - net
     
@@ -21,8 +23,8 @@ services:
       - schennel-mysql:/var/lib/mysql
     environment:
       TZ: Asia/Seoul
-      MYSQL_ROOT_PASSWORD: Super-Easy-Passw0rd
-      MYSQL_DATABASE: schennel
+    env_file:
+      - .env
     ports:
       - 3306:3306
     networks:
