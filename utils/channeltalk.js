@@ -79,6 +79,21 @@ cht.commandHandler = {
     }
 }
 
+cht.reminderHandler = {
+    async makeReminder(){
+
+    },
+    async doReminder(){
+
+    },
+    async removeRemider(){
+
+    },
+    async listReminder(){
+
+    }
+}
+
 cht.util = {
     sendMessage : async (group_id, mes) => {
         const b = await fetch(`https://api.channel.io/open/v3/groups/${group_id}/messages?botName=${CHANNEL_BOT_NAME}`, {

@@ -23,8 +23,8 @@ batch.commands = { // If too long, Can't print...
         intro: '시간 규칙을 출력합니다. 처음 쓰시는 분들은 꼭 확인하세요!\n',
     },
     "!리마인더": {
-        func: (args) => args.length > 0 ? batch.reminder_command[args[0]].func(args.slice(1)) : "인자 수가 부족합니다!",
-        intro: `리마인더 관련 명령어입니다. 자세한 사용법은 !리마인더 사용법으로 확인해세요\n`
+        func: async (args) => args.length > 0 ? await batch.reminder_command[args[0]].func(args.slice(1)) : "인자 수가 부족합니다!",
+        intro: `리마인더 관련 명령어입니다. 자세한 사용법은 !리마인더 사용법으로 확인하세요\n`
     },
     "!테스트": {
         func: (args, userid) => `${userid}님의 새로운 메시지: ${args}`,

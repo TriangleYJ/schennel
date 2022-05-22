@@ -21,6 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     participants: DataTypes.STRING,
     schedule_string: DataTypes.STRING,
+    group_id: DataTypes.STRING,
   }, {
     sequelize,
     modelName: 'Reminder',

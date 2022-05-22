@@ -1,4 +1,4 @@
-const { Vote } = require('../models')
+const { Vote, Reminder } = require('../models')
 const { timeUnwrap, timeToAvailability } = require('../utils/timeparser')
 const { requestNewVote, requestDoVote, requestGetContent, requestGetDetail } = require('../utils/when2meet')
 const schedule = {}
@@ -90,19 +90,30 @@ schedule.listVote = async () => {
 }
 
 schedule.makeReminder = async () => {
-
+    await Reminder.create({
+        name: "안녕",
+        participants: "triange,hello,world",
+        schedule_string: "2021-12-21 23:00 -5 -60",
+        group_id: '164068'
+    })
+    return true
 }
 
-schedule.doReminder = async () => {
-
+schedule.doReminder = async (name) => {
+    const elem = await Reminder.findOne({where: {name: name}})
+    if(!elem) throw "해당 이름의 리마인더를 찾지 못했습니다!"
+    return elem
+    //return true: TODO node-schedule
 }
 
-schedule.removeReminder = async () => {
-
+schedule.removeReminder = async (name) => {
+    await Reminder.destroy({where: {name: name}})
+    return true
 }
 
 schedule.listReminder = async () => {
-    
+    const data = await Reminder.findAll()
+    return data
 }
 
 /* schedule.get('/gc', async (req, res) => {
