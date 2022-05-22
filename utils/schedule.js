@@ -89,6 +89,22 @@ schedule.listVote = async () => {
     return all
 }
 
+schedule.makeReminder = async () => {
+
+}
+
+schedule.doReminder = async () => {
+
+}
+
+schedule.removeReminder = async () => {
+
+}
+
+schedule.listReminder = async () => {
+    
+}
+
 /* schedule.get('/gc', async (req, res) => {
     const vid = "15726999-mp7pR"
 

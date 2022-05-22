@@ -1,6 +1,8 @@
-const { default: axios } = require("axios");
 const schedule = require("./schedule");
 const { origin } = require("./when2meet");
+const { CHANNEL_BOT_NAME, CHANNEL_API_KEY, CHANNEL_API_SECRET } = process.env
+const JSONHEADER = { accept: "application/json", "Content-Type": "application/json" }
+const fetch = require('node-fetch');
 
 const mentionWrapper = x => {
     const s = x.split(":")
@@ -77,18 +79,28 @@ cht.commandHandler = {
     }
 }
 
-cht.hello = (res) => "hello world! " + res;
-cht.sendMessage = (message) => {
-    /*     axios.post(`https://api.channel.io/open/v3/groups/${GROUP_ID}/messages?botName=${BOT_NAME}`, {
-            "blocks": [
-                {
-                  "type": "text",
-                  "value": message
-                },
-            ]
-        }) */
+cht.util = {
+    sendMessage : async (group_id, mes) => {
+        const b = await fetch(`https://api.channel.io/open/v3/groups/${group_id}/messages?botName=${CHANNEL_BOT_NAME}`, {
+            "headers": {...JSONHEADER, "x-access-key": CHANNEL_API_KEY, "x-access-secret": CHANNEL_API_SECRET},
+            "method": "POST",
+            "body": JSON.stringify(cht.util.serializeOutput(mes))
+        })
+        const res = await b.json()
+        if(b.status !== 200) throw res
+    },
+    quickReply : (res, out) => {
+        res.set({ ...JSONHEADER, "x-quick-reply": "true", "x-bot-name": CHANNEL_BOT_NAME }).json(cht.util.serializeOutput(out))
+    },
+    serializeOutput : (out) => {
+        return {
+            "blocks": (typeof out === 'string') ? out.split("|").map(x => {
+                x = x.trim()
+                if (x.slice(0, 2) === ">>") return { "type": "code", "value": x.slice(2, x.length) }
+                return { "type": "text", "value": x }
+            }) : out,
+        }
+    }
 }
-
-
 
 module.exports = cht;
