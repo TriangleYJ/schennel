@@ -87,6 +87,11 @@ schedule.listVote = async () => {
     return all
 }
 
+schedule.checkEmpty = async () => {
+    if (await Vote.count() === 0) return true;
+    return false;
+}
+
 schedule.makeReminder = async (name, participants, schedule_string, group_id) => {
     const data = { name, participants: participants.join(","), schedule_string, group_id }
     const foundItem = await Reminder.findOne({ where: { name: name } })

@@ -41,16 +41,18 @@ cht.commandHandler = {
         // TODO: add reminder
         if (args.length === 0) throw "인자 개수가 부족합니다!"
         const curr = await schedule.currentVote()
-        const new_curr = await schedule.currentVote()
         const voter = curr.participants
         const mkres = await cht.reminderHandler.makeReminder([curr.name, ...args], aux, voter.length ? voter.split(",") : null)
         await schedule.deleteVote(curr.name)
+        if(await schedule.checkEmpty()) return `${curr.name} 일정조사가 확정되었습니다.\n` + mkres
+        const new_curr = await schedule.currentVote()
         return `${curr.name} 일정조사가 확정되었습니다.\n[${curr.name} -> ${new_curr.name}] 현재 투표중인 일정이 변경되었습니다.\n` + mkres
 
     },
     async cancelVote(args) {
         if (!args[0]) throw "이름을 입력해 주세요!"
         await schedule.deleteVote(args[0])
+        if(await schedule.checkEmpty()) return `${args[0]} 투표가 취소되었습니다`
         const curr = await schedule.currentVote()
         return `${args[0]} 투표가 취소되었습니다\n[${curr.name}] 현재 투표중인 일정입니다.`
     },
