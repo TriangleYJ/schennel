@@ -70,7 +70,7 @@ cht.commandHandler = {
         const url = `${origin}?${curr.vid}`
         const voter = await schedule.getParticipant()
         const addr = voter[0].length !== 0 ? `\n${voter[0].map(x => x.split(":"[0])).join(", ")}님이 투표해주셨습니다` : ''
-        return `[${curr.name}] 현재 투표중인 일정입니다\n<link type="url" value="${url}">${url}</link>${addr}`
+        return `[${curr.name}] 현재 투표중인 일정입니다: ${curr.schedule_string}\n<link type="url" value="${url}">${url}</link>${addr}`
     },
     async remind() {
 
