@@ -7,7 +7,7 @@ services:
       - 'NODE_ENV=production'
     depends_on:
       - db
-    restart: 'on-failure:5'
+    restart: 'on-failure:7'
     ports:
       - 8000:8000
     env_file:
