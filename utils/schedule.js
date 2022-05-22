@@ -65,7 +65,7 @@ schedule.getParticipant = async () => {
 
     let k = await requestGetDetail(elem.vid)
     let voter = k.participant;
-    let p = nessaryVoter.filter(x => !k.participant.includes(x))
+    let p = nessaryVoter.filter(x => !k.participant.includes(x.split(":")[0]))
     return [voter, p]
 }
 
