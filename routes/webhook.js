@@ -12,7 +12,7 @@ router.post('/', async (req, res) => {
         const args = plainText.split(" ")
 
         if (refers.manager && Object.keys(commands).includes(args[0])) {
-            out = await (batch.runCommand(commands) (args, body))
+            const out = await (batch.runCommand(commands)(args, body))
             if (out) {
                 quickReply(res, out)
                 return;

@@ -8,7 +8,6 @@ const { reminderUnwrap } = require("./timeparser");
 const mentionWrapper = x => {
     const s = x.split(":")
     const uid = (s.length === 2 ? s[1] : "")
-    console.log(s[0], uid)
     return `<link type="manager" value="${uid}">@${s[0]}</link>`
 }
 
@@ -40,7 +39,7 @@ cht.commandHandler = {
     },
     async confirmVote(args, aux) {
         // TODO: add reminder
-        if(args.length === 0) throw "인자 개수가 부족합니다!"
+        if (args.length === 0) throw "인자 개수가 부족합니다!"
         const curr = await schedule.currentVote()
         const new_curr = await schedule.currentVote()
         const voter = curr.participants
@@ -83,7 +82,7 @@ cht.commandHandler = {
 }
 
 cht.reminderHandler = {
-    async makeReminder(args, aux, additional_voter){
+    async makeReminder(args, aux, additional_voter) {
         const rawtext = aux.rawtext
         const group_id = aux.group_id
 
@@ -94,49 +93,49 @@ cht.reminderHandler = {
 
         const regex_str = `(?:<link type="manager" value="(\\d+)">@(\\S+)<\/link>|\\s@(\\S+))`
         const links = rawtext.match(new RegExp(regex_str, 'g'))
-        if(links) for(let link of links){
+        if (links) for (let link of links) {
             const d = link.match(new RegExp(regex_str))
-            if(d[1]) voter.push(d[2] + ":" + d[1])
-            else if(d[3]) voter.push(d[3])
+            if (d[1]) voter.push(d[2] + ":" + d[1])
+            else if (d[3]) voter.push(d[3])
         }
-        
+
         if (!timestr || !name) throw "입력한 값을 다시 확인해 주세요"
         const times = reminderUnwrap(timestr)[1] // do validate + get remain time
         await schedule.makeReminder(name, voter, timestr, group_id)
 
         return `[${name}] 리마인더가 생성되었습니다. ${times.join(", ")} 전에 알려드립니다.`
     },
-    async doReminder(args){
+    async doReminder(args) {
         if (!args[0]) throw "이름을 입력해 주세요!"
         const elem = await schedule.findReminder(args[0])
         const voter = elem.participants.split(",")
         return `[${elem.name}] 리마인더 알림입니다. ${voter.map(x => mentionWrapper(x)).join(" ")}`
     },
-    async removeRemider(args){
+    async removeRemider(args) {
         if (!args[0]) throw "이름을 입력해 주세요!"
         await schedule.removeReminder(args[0])
         return `[${args[0]}] 리마인더가 삭제되었습니다.`
     },
-    async listReminder(){
+    async listReminder() {
         const elems = await schedule.listReminder();
         return elems.map(x => `[<b>${x.name}</b>] ${x.schedule_string} \n참여자: ${x.participants.split(",").map(x => x.split(":")[0]).join(", ")}`).join("\n")
     }
 }
 
 cht.util = {
-    sendMessage : async (group_id, mes) => {
+    sendMessage: async (group_id, mes) => {
         const b = await fetch(`https://api.channel.io/open/v3/groups/${group_id}/messages?botName=${CHANNEL_BOT_NAME}`, {
-            "headers": {...JSONHEADER, "x-access-key": CHANNEL_API_KEY, "x-access-secret": CHANNEL_API_SECRET},
+            "headers": { ...JSONHEADER, "x-access-key": CHANNEL_API_KEY, "x-access-secret": CHANNEL_API_SECRET },
             "method": "POST",
             "body": JSON.stringify(cht.util.serializeOutput(mes))
         })
         const res = await b.json()
-        if(b.status !== 200) throw res
+        if (b.status !== 200) throw res
     },
-    quickReply : (res, out) => {
+    quickReply: (res, out) => {
         res.set({ ...JSONHEADER, "x-quick-reply": "true", "x-bot-name": CHANNEL_BOT_NAME }).json(cht.util.serializeOutput(out))
     },
-    serializeOutput : (out) => {
+    serializeOutput: (out) => {
         return {
             "blocks": (typeof out === 'string') ? out.split("|").map(x => {
                 x = x.trim()
@@ -144,7 +143,8 @@ cht.util = {
                 return { "type": "text", "value": x }
             }) : out,
         }
-    }
+    },
+    mentionWrapper,
 }
 
 module.exports = cht;

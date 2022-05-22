@@ -23,9 +23,9 @@ batch.reminder_command = {
     },
     "생성": {
         func: makeReminder,
-        intro: `리마인더를 생성합니다. 시간은 js Date 형식에 맞추어 작성하세요.\n기존에 이미 존재하는 경우 덮어씁니다. 미리 알림 단위는 분과 시만 사용 가능합니다.\n이름에 공백은 허용되지 않습니다|
+        intro: `리마인더를 생성합니다. 시간은 js Date 형식에 맞추어 작성하세요.\n기존에 이미 존재하는 경우 덮어씁니다. 미리 알림 단위는 분과 시만 사용 가능합니다.\n이름에 공백은 허용되지 않습니다. 미리 알림 시간이 안 정해진 경우 기본값으로 30분 전에 리마인더 됩니다.|
         >>예시: !리마인더 생성 [이름] 2022-05-22 12:23@5분 60분 1시 24시 @사용자1 @사용자2 @사용자3|`,
-        aux: body => {return {rawtext: body.entity.blocks[0].value, group_id: body.refers.group.id}}
+        aux: body => { return { rawtext: body.entity.blocks[0].value, group_id: body.refers.group.id } }
     },
     "삭제": {
         func: removeRemider,
@@ -77,7 +77,7 @@ batch.commands = { // If too long, Can't print...
         func: confirmVote,
         intro: `현재 투표를 종료하고, 30분 전에 전에 투표한 사람들에 대해 리마인더 메시지를 보내줍니다.\n이름이 없다는 점을 제외하고 !리마인더 생성과 규칙이 같습니다|
         >>예시: !투표확정 2022-05-22 12:00@5분 30분 @추가멘션|`,
-        aux: body => {return {rawtext: body.entity.blocks[0].value, group_id: body.refers.group.id}}
+        aux: body => { return { rawtext: body.entity.blocks[0].value, group_id: body.refers.group.id } }
     },
     "!투표삭제": {
         func: cancelVote,

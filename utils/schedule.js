@@ -1,6 +1,7 @@
 const { Vote, Reminder } = require('../models')
-const { timeUnwrap, timeToAvailability } = require('../utils/timeparser')
+const { timeUnwrap, timeToAvailability, reminderUnwrap } = require('../utils/timeparser')
 const { requestNewVote, requestDoVote, requestGetContent, requestGetDetail } = require('../utils/when2meet')
+const nodeSchedule = require('node-schedule')
 const schedule = {}
 
 const getRecentVote = async () => {
@@ -40,7 +41,7 @@ schedule.doVote = async (timestring, user) => {
     const elem = await getRecentVote();
     let k = await requestGetDetail(elem.vid)
     let u = timeUnwrap(timestring)
-    if(u === null) throw "time syntax error"
+    if (u === null) throw "time syntax error"
     await requestDoVote(user, elem.vid, timeToAvailability(k.timeOfSlot, u))
     return elem
 }
@@ -87,22 +88,28 @@ schedule.listVote = async () => {
 }
 
 schedule.makeReminder = async (name, participants, schedule_string, group_id) => {
-    const data = {name, participants: participants.join(","), schedule_string, group_id}
-    const foundItem = await Reminder.findOne({where: {name: name}})
+    const data = { name, participants: participants.join(","), schedule_string, group_id }
+    const foundItem = await Reminder.findOne({ where: { name: name } })
     if (!foundItem) await Reminder.create(data)
-    else await Reminder.update(data, {where: {name: name}})
+    else await Reminder.update(data, { where: { name: name } })
     return true
 }
 
 schedule.findReminder = async (name) => {
-    const elem = await Reminder.findOne({where: {name: name}})
-    if(!elem) throw "해당 이름의 리마인더를 찾지 못했습니다!"
+    const elem = await Reminder.findOne({ where: { name: name } })
+    if (!elem) throw "해당 이름의 리마인더를 찾지 못했습니다!"
     return elem
     //return true: TODO node-schedule
 }
 
 schedule.removeReminder = async (name) => {
-    await Reminder.destroy({where: {name: name}})
+    const elem = await Reminder.find({ where: { name: name } })
+    const dd = reminderUnwrap(elem.schedule_string)
+    for (let before of dd[1]) {
+        const uid = elem.name + "@" + before
+        if (nodeSchedule.scheduledJobs[uid]) nodeSchedule.scheduledJobs[uid].cancel()
+    }
+    await Reminder.destroy({ where: { name: name } })
     return true
 }
 
@@ -113,13 +120,42 @@ schedule.listReminder = async () => {
 
 schedule.initReminder = async () => {
     const elems = await Reminder.findAll()
-    for(let elem of elems){
-        this.registerReminder(elem)
+    for (let elem of elems) {
+        schedule.registerReminder(elem)
     }
 }
 
 schedule.registerReminder = async (elem) => {
+    const { sendMessage, mentionWrapper } = require('./channeltalk').util
+    let used = false
+    try {
+        const dd = reminderUnwrap(elem.schedule_string)
+        for (let before of dd[1]) {
+            const blast = before[before.length - 1]
+            //console.log(dd, parseInt(before.substring(0, before.length - 1)), blast)
+            const reminderT = new Date(dd[0]).getTime() - (parseInt(before.substring(0, before.length - 1)) * (blast === "시" ? 3600000 : 60000))
+            if (reminderT > new Date().getTime()) {
+                used = true
+                const uid = elem.name + "@" + before
+                //console.log("스케줄러 후보", uid)
+                if (nodeSchedule.scheduledJobs[uid] === undefined) {
+                    const objDate = new Date(reminderT)
+                    const voter = elem.participants.split(",")
+                    console.log("스케줄러 등록", uid, objDate)
+                    nodeSchedule.scheduleJob(uid, objDate, () => {
+                        console.log("스케줄러 알림", uid, objDate)
+                        sendMessage(elem.group_id, `[${elem.name}] ${before}전 리마인더 알림입니다. ${voter.map(x => mentionWrapper(x)).join(" ")}`)
+                        schedule.registerReminder(elem)
+                    })
+                }
 
+            }
+        }
+        if (!used) await schedule.removeReminder(elem.name)
+    } catch (e) {
+        console.log(e)
+        sendMessage(elem.group_id, "오류가 발생했습니다: " + e)
+    }
 }
 
 /* schedule.get('/gc', async (req, res) => {
