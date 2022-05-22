@@ -17,14 +17,15 @@ batch.runCommand = commands => async (args, body) => {
 
 batch.reminder_command = {
     "테스트": {
-        func: (args, aux) => `hello ${args[0]} ${aux}`,
-        intro: '테스트 명령어입니다.\n',
-        aux: body => body.entity.blocks[0].value
+        func: (args, userid) => `${userid}님의 새로운 메시지: ${args}`,
+        intro: `간단한 echo 테스트 커맨드입니다.\n`,
+        aux: body => body.refers.manager.name
     },
     "생성": {
         func: makeReminder,
-        intro: `리마인더를 생성합니다. 시간은 js Date 형식에 맞추어 작성하세요.\n기존에 이미 존재하는 경우 덮어씁니다\n미리 알림 단위는 m과 h만 사용 가능합니다.|
-        >>예시: !리마인더 생성 [이름] 2022-05-22 12:23@5m 60m 1h 24h @사용자1 @사용자2 @사용자3|`
+        intro: `리마인더를 생성합니다. 시간은 js Date 형식에 맞추어 작성하세요.\n기존에 이미 존재하는 경우 덮어씁니다. 미리 알림 단위는 분과 시만 사용 가능합니다.\n이름에 공백은 허용되지 않습니다|
+        >>예시: !리마인더 생성 [이름] 2022-05-22 12:23@5분 60분 1시 24시 @사용자1 @사용자2 @사용자3|`,
+        aux: body => {return {rawtext: body.entity.blocks[0].value, group_id: body.refers.group.id}}
     },
     "삭제": {
         func: removeRemider,
@@ -74,8 +75,9 @@ batch.commands = { // If too long, Can't print...
     },
     "!투표확정": {
         func: confirmVote,
-        intro: `현재 투표를 종료하고, 한시간 전에 투표한 사람들에 대해 리마인더 메시지를 보내줍니다.|
-        >>예시: !투표확정 수:11-15 2021-02-23|`
+        intro: `현재 투표를 종료하고, 30분 전에 전에 투표한 사람들에 대해 리마인더 메시지를 보내줍니다.\n이름이 없다는 점을 제외하고 !리마인더 생성과 규칙이 같습니다|
+        >>예시: !투표확정 2022-05-22 12:00@5분 30분 @추가멘션|`,
+        aux: body => {return {rawtext: body.entity.blocks[0].value, group_id: body.refers.group.id}}
     },
     "!투표삭제": {
         func: cancelVote,

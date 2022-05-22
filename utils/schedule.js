@@ -4,7 +4,7 @@ const { requestNewVote, requestDoVote, requestGetContent, requestGetDetail } = r
 const schedule = {}
 
 const getRecentVote = async () => {
-    if (await Vote.count() === 0) return null;
+    if (await Vote.count() === 0) throw "현재 진행중인 일정 투표가 없습니다!"
     return await Vote.findOne({ order: [['updatedAt', 'DESC']], })
 }
 
@@ -38,7 +38,6 @@ schedule.doVote = async (timestring, user) => {
     // const user = "fdas"
 
     const elem = await getRecentVote();
-    if (!elem) throw "현재 진행중인 일정조사가 없습니다!"
     let k = await requestGetDetail(elem.vid)
     let u = timeUnwrap(timestring)
     if(u === null) throw "time syntax error"
@@ -48,7 +47,6 @@ schedule.doVote = async (timestring, user) => {
 
 schedule.getStatus = async () => {
     const elem = await getRecentVote();
-    if (!elem) throw "현재 진행중인 일정조사가 없습니다!"
 
     let k = await requestGetDetail(elem.vid)
     const all = await Vote.findAll()
@@ -60,7 +58,6 @@ schedule.getStatus = async () => {
 
 schedule.getParticipant = async () => {
     const elem = await getRecentVote()
-    if (!elem) throw "현재 진행중인 일정조사가 없습니다!"
     const nessaryVoter = elem.participants.split(",")
 
     let k = await requestGetDetail(elem.vid)
@@ -90,13 +87,10 @@ schedule.listVote = async () => {
 }
 
 schedule.makeReminder = async (name, participants, schedule_string, group_id) => {
-    await schedule.removeReminder(name) // nothing done if the name is new
-    await Reminder.create({
-        name,
-        participants: participants.join(","),
-        schedule_string,
-        group_id,
-    })
+    const data = {name, participants: participants.join(","), schedule_string, group_id}
+    const foundItem = await Reminder.findOne({where: {name: name}})
+    if (!foundItem) await Reminder.create(data)
+    else await Reminder.update(data, {where: {name: name}})
     return true
 }
 
