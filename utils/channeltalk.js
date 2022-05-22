@@ -80,17 +80,37 @@ cht.commandHandler = {
 }
 
 cht.reminderHandler = {
-    async makeReminder(){
-
+    async makeReminder(args, rawtext){
+        const name = args[0]
+        const voter = []
+        for (let i = 2; i < args.length; i++) {
+            if (args[i][0] === '@') {
+                const reg = new RegExp(`<link type="manager" value="(\\d+)">${args[i]}</link>`)
+                const match = rawtext.match(reg)
+                voter.push(args[i].substring(1) + (match ? (":" + match[1]) : ""))
+            }
+        }
+        if (!timeslot || !name || voter.length === 0) throw "입력한 값을 다시 확인해 주세요"
+        // args[3...]: 
+        const vid = await schedule.createVote(voter, timeslot, name)
+        const url = `${origin}?${vid}`
+        return `[${name}] 일정이 생성되었습니다! 아래 링크에서 확인하시거나, !투표 명령어를 통해 바로 투표해 보세요\n<link type="url" value="${url}">${url}</link>`
     },
-    async doReminder(){
-
+    async doReminder(args){
+        if (!args[0]) throw "이름을 입력해 주세요!"
+        console.log(await schedule.listReminder())
+        const elem = await schedule.findReminder(args[0])
+        const voter = elem.participants.split(",")
+        return `[${elem.name}] 리마인더 알림입니다. ${voter.map(x => mentionWrapper(x)).join(" ")}`
     },
-    async removeRemider(){
-
+    async removeRemider(args){
+        if (!args[0]) throw "이름을 입력해 주세요!"
+        await schedule.removeReminder(args[0])
+        return `[${args[0]}] 리마인더가 삭제되었습니다.`
     },
     async listReminder(){
-
+        const elems = await schedule.listReminder();
+        return elems.map(x => `[${x.name}] ${x.schedule_string} \n참여자: ${x.participants.split(",").map(x => x.split(":")[0]).join(", ")}`).join("\n")
     }
 }
 

@@ -97,8 +97,18 @@ const parser = {
         return DSTRING_EN[string]
     },
     intersectTimeHexs(timeHexs){
-        return [0, 0, 0, 0, 0, 0, 0]
+        return [0, 0, 0, 0, 0, 0, 0] //TODO
+    },
+    reminderUnwrap(string) {
+        // schedule_string: "2021-12-21 23:00|5 60",
+        const seg = string.split("@")
+        if((new Date(seg[0]) === "Invalid Date") || isNaN(new Date(seg[0]))) throw "Invalid date"
+        return [new Date(seg[0]), seg.length > 1 ? seg[1].split(" ") : []]
+    },
+    reminderWrap(date, notifyList) {
+        return `${date.toISOString()}@${notifyList.join(" ")}`
     }
+
 }
 
 module.exports = parser

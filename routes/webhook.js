@@ -1,4 +1,5 @@
 const express = require('express')
+const batch = require('../utils/commandlist')
 const { quickReply } = require('../utils/channeltalk').util
 const { commands } = require('../utils/commandlist')
 const router = express.Router()
@@ -8,18 +9,10 @@ router.post('/', async (req, res) => {
         const body = req.body;
         const { entity, refers } = body;
         const { plainText = '', chatId: groupId } = entity;
-        const segment = plainText.split(" ")
-        const prefix = segment.shift()
+        const args = plainText.split(" ")
 
-        if (refers.manager && Object.keys(commands).includes(prefix)) {
-            let out = null;
-            try {
-                const auxf = commands[prefix]["aux"]
-                out = await commands[prefix].func(segment, auxf ? auxf(body) : null)
-            } catch (e) {
-                console.log(e)
-                out = "Error: " + e
-            }
+        if (refers.manager && Object.keys(commands).includes(args[0])) {
+            out = await (batch.runCommand(commands) (args, body))
             if (out) {
                 quickReply(res, out)
                 return;

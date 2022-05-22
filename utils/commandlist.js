@@ -1,14 +1,42 @@
+const { makeReminder, doReminder, removeRemider, listReminder } = require('./channeltalk').reminderHandler
 const { createVote, doVote, confirmVote, cancelVote, listVote, checkoutVote, alertVote, currentVote, remind } = require('../utils/channeltalk').commandHandler
 const batch = {}
 
+batch.runCommand = commands => async (args, body) => {
+    try {
+        if (args.length == 0) throw "인자 수가 너무 적습니다!"
+        let out = ""
+        const auxf = commands[args[0]]["aux"]
+        out = await commands[args[0]].func(args.slice(1), auxf && body ? auxf(body) : null)
+        return out
+    } catch (e) {
+        console.log(e)
+        return "Error: " + e
+    }
+}
+
 batch.reminder_command = {
     "테스트": {
-        func: (args) => `hello ${args[0]}`,
-        intro: '테스트 명령어입니다.\n'
+        func: (args, aux) => `hello ${args[0]} ${aux}`,
+        intro: '테스트 명령어입니다.\n',
+        aux: body => body.entity.blocks[0].value
     },
-    "테32": {
-        func: () => "hello2",
-        intro: '1234234.\n'
+    "생성": {
+        func: makeReminder,
+        intro: `리마인더를 생성합니다. 시간은 js Date 형식에 맞추어 작성하세요.\n기존에 이미 존재하는 경우 덮어씁니다\n미리 알림 단위는 m과 h만 사용 가능합니다.|
+        >>예시: !리마인더 생성 [이름] 2022-05-22 12:23@5m 60m 1h 24h @사용자1 @사용자2 @사용자3|`
+    },
+    "삭제": {
+        func: removeRemider,
+        intro: `주어진 이름의 리마인더를 삭제합니다.\n`
+    },
+    "알림": {
+        func: doReminder,
+        intro: `주어진 이름의 리마인더를 시간에 관계없이 실행합니다.\n`
+    },
+    "목록": {
+        func: listReminder,
+        intro: `현재 존재하는 리마인더 목록을 띄워줍니다.\n`
     },
     "사용법": {
         func: async () => Object.keys(batch.reminder_command).map(x => "<b>!리마인더 " + x + "</b> : " + batch.reminder_command[x].intro).join(""),
@@ -23,8 +51,9 @@ batch.commands = { // If too long, Can't print...
         intro: '시간 규칙을 출력합니다. 처음 쓰시는 분들은 꼭 확인하세요!\n',
     },
     "!리마인더": {
-        func: async (args) => args.length > 0 ? await batch.reminder_command[args[0]].func(args.slice(1)) : "인자 수가 부족합니다!",
-        intro: `리마인더 관련 명령어입니다. 자세한 사용법은 !리마인더 사용법으로 확인하세요\n`
+        func: batch.runCommand(batch.reminder_command),
+        intro: `리마인더 관련 명령어입니다. 자세한 사용법은 !리마인더 사용법으로 확인하세요\n`,
+        aux: body => body
     },
     "!테스트": {
         func: (args, userid) => `${userid}님의 새로운 메시지: ${args}`,

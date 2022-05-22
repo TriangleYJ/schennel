@@ -89,17 +89,18 @@ schedule.listVote = async () => {
     return all
 }
 
-schedule.makeReminder = async () => {
+schedule.makeReminder = async (name, participants, schedule_string, group_id) => {
+    await schedule.removeReminder(name) // nothing done if the name is new
     await Reminder.create({
-        name: "안녕",
-        participants: "triange,hello,world",
-        schedule_string: "2021-12-21 23:00 -5 -60",
-        group_id: '164068'
+        name,
+        participants: participants.join(","),
+        schedule_string,
+        group_id,
     })
     return true
 }
 
-schedule.doReminder = async (name) => {
+schedule.findReminder = async (name) => {
     const elem = await Reminder.findOne({where: {name: name}})
     if(!elem) throw "해당 이름의 리마인더를 찾지 못했습니다!"
     return elem
@@ -114,6 +115,17 @@ schedule.removeReminder = async (name) => {
 schedule.listReminder = async () => {
     const data = await Reminder.findAll()
     return data
+}
+
+schedule.initReminder = async () => {
+    const elems = await Reminder.findAll()
+    for(let elem of elems){
+        this.registerReminder(elem)
+    }
+}
+
+schedule.registerReminder = async (elem) => {
+
 }
 
 /* schedule.get('/gc', async (req, res) => {
