@@ -6,6 +6,7 @@ batch.runCommand = commands => async (args, body) => {
     try {
         if (args.length == 0) throw "인자 수가 너무 적습니다!"
         let out = ""
+        if(!commands[args[0]]) throw "알 수 없는 명령어입니다!"
         const auxf = commands[args[0]]["aux"]
         out = await commands[args[0]].func(args.slice(1), auxf && body ? auxf(body) : null)
         return out

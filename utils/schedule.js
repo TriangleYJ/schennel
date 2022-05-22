@@ -92,6 +92,8 @@ schedule.makeReminder = async (name, participants, schedule_string, group_id) =>
     const foundItem = await Reminder.findOne({ where: { name: name } })
     if (!foundItem) await Reminder.create(data)
     else await Reminder.update(data, { where: { name: name } })
+    const elem = await Reminder.findOne({ where: { name: name } })
+    schedule.registerReminder(elem)
     return true
 }
 
@@ -103,10 +105,11 @@ schedule.findReminder = async (name) => {
 }
 
 schedule.removeReminder = async (name) => {
-    const elem = await Reminder.find({ where: { name: name } })
+    const elem = await Reminder.findOne({ where: { name: name } })
     const dd = reminderUnwrap(elem.schedule_string)
     for (let before of dd[1]) {
         const uid = elem.name + "@" + before
+        console.log("스케줄러 삭제", uid, objDate)
         if (nodeSchedule.scheduledJobs[uid]) nodeSchedule.scheduledJobs[uid].cancel()
     }
     await Reminder.destroy({ where: { name: name } })

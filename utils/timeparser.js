@@ -103,7 +103,15 @@ const parser = {
         // schedule_string: "2021-12-21 23:00|5 60",
         const seg = string.split("@")
         if((new Date(seg[0]) === "Invalid Date") || isNaN(new Date(seg[0]))) throw "Invalid date"
-        return [new Date(seg[0]), seg.length > 1 ? seg[1].split(" ") : ['30분']]
+        let bout = ['30분']
+        if(seg.length > 1){
+            const bseg = seg[1].split(" ")
+            for(let b of bseg){
+                if(!/^(\d+)(?:시|분)$/.test(b)) throw "Invalid remain time"
+            }
+            bout = seg[1].split(" ")
+        }
+        return [new Date(seg[0]), bout]
     },
     reminderWrap(date, notifyList) {
         return `${date.toISOString()}@${notifyList.join(" ")}`
